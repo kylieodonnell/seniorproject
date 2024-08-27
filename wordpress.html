@@ -8,7 +8,7 @@
             padding: 0;
             box-sizing: border-box;
         }
-
+    
         html, body {
             display: flex;
             justify-content: center;
@@ -17,13 +17,13 @@
         }
         
         .background {
-            width: 1400px; 
+            width: 1300px; 
             height: 696px; 
             background-color: #F4F3F1; 
             border-radius: 25px; 
             position: relative;
         }
-
+    
         .top-bar {
             width: 100%;
             height: 45px; 
@@ -40,28 +40,33 @@
             font-size: 26px;
             letter-spacing: 25px;
         }
-        .level-container {
-            margin-top: 0px;
-            width: 100%;
+    
+        .level-container, .info-container {
             display: flex;
             flex-direction: column;
             gap: 50px;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 50px;
+            bottom: 50px;
+            z-index: 1;
         }
-
-        .level-row {
+    
+        .level-row, .info {
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 30px;
-            margin-top: 40px;
-            margin-bottom: -85px;
+            margin-top: 70px;
+            margin-bottom: -60px;
         }
-
+    
         .level-button {
-            font-family:Arial, Helvetica, sans-serif;
-            width: 300px;
+            font-family: Arial, Helvetica, sans-serif;
+            width: 500px;
             height: 70px;
-            background-color: #97A8A3;
             border: none;
             border-radius: 50px;
             display: flex;
@@ -74,80 +79,216 @@
             text-align: center;
             transition: background-color 0.3s;
         }
+    
+        .back-button {
+            font-family: Arial, Helvetica, sans-serif;
+            width: 200px;
+            height: 50px;
+            border: none;
+            border-radius: 25px;
+            font-size: 20px;
+            color: #ffffff;
+            background-color: #154734;
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
 
-        .level-button:hover {
-            background-color: #7D8F8A;
+        .back-button:hover {
+            background-color: #BD8B13;
+        }
+    
+        .levelInfo {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 50px;
+            color: #4C6B5A;
+            position: absolute;
+            top: 10px; 
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         .slider-container {
-            width: 60%;
+            width: 450px;
             height: 30px;
             background-color: #e0e0e0;
-            border-radius: 100px;
+            border-radius: 200px;
             position: relative;
-            margin-left: 20px;
+            margin-left: 40px;
         }
-
+    
         .slider-fill {
             height: 100%;
-            background-color: #97A8A3;
             border-radius: 10px;
         }
-
+    
         .percentage {
-            width: 80px;
+            width: 130px;
             text-align: right;
             font-size: 35px;
             letter-spacing: 10px;
             color: #4C6B5A;
+            
         }
 
+        .details-container {
+            font-family: Arial, Helvetica, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #ffffff;
+            font-size: 30px;
+            letter-spacing: 15px;
+            cursor: pointer;
+            text-align: center;
+            position: absolute;
+            top: 70px; 
+            width: 100%;
+        
+        }
+
+        .details-container button {
+            background-color: #B6CCC2; 
+            border: none;
+            padding: 10px 20px;
+            font-size: 30px;
+            color: #ffffff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .rotate-90 {
+            transform: rotate(90deg);
+        }
+
+        .floor-image {
+            width: 450px;
+            margin-top: 570px;
+            margin-right: 500px;
+            height: auto;
+            position: absolute;
+            z-index: -1; 
+        }
+
+        .rounded-rectangle {
+            margin-top: -90px;
+            margin-left: 50px; 
+            width: 500px; 
+            height: 400px; 
+            background-color: #EBF1EF; 
+            color:#154734;
+            border-radius: 15px; 
+            position: absolute;
+            z-index: 1;
+            align-items: flex-start;
+            justify-content: center;
+            font-size: 24px;
+            padding-top: 20px;
+        }
+        
     </style>
 </head>
 <body>
     <div class="background">
         <div class="top-bar">OCCUPANCY COUNTER</div>
-        <div class="level-container">
-            <div class="level-row">
-                <button class="level-button">LEVEL 1</button>
-                <div class="slider-container">
-                    <div class="slider-fill" style="width: 73%;"></div>
-                </div>
-                <div class="percentage">73%</div>
+        <div class="level-container" id="levelContainer"></div>
+        <div class="info-container hidden" id="infoContainer">
+            <div class="info">
+                <button class="back-button">Back to Levels</button>
+                <div class="levelInfo" id="levelInfo"></div>
             </div>
-            <div class="level-container">
-                <div class="level-row">
-                    <button class="level-button">LEVEL 2</button>
-                    <div class="slider-container">
-                        <div class="slider-fill" style="width: 73%;"></div>
-                    </div>
-                    <div class="percentage">73%</div>
-                </div>
-            <div class="level-container">
-                <div class="level-row">
-                    <button class="level-button">LEVEL 3</button>
-                    <div class="slider-container">
-                        <div class="slider-fill" style="width: 73%;"></div>
-                    </div>
-                    <div class="percentage">73%</div>
-                </div>
-            <div class="level-container">
-                <div class="level-row">
-                    <button class="level-button">LEVEL 4</button>
-                    <div class="slider-container">
-                        <div class="slider-fill" style="width: 73%;"></div>
-                    </div>
-                    <div class="percentage">73%</div>
-                </div>
-            <div class="level-container">
-                <div class="level-row">
-                    <button class="level-button">LEVEL 5</button>
-                    <div class="slider-container">
-                        <div class="slider-fill" style="width: 73%;"></div>
-                    </div>
-                    <div class="percentage">73%</div>
-                </div>
+            <div class="details-container" id="detailsContainer"></div>
+        </div>
     </div>
-    </div>
+
+    <script>
+        const levels = [
+            { level: 1, percentage: 73, color: '#B6CCC2', hoverColor: '#BD8B13' },
+            { level: 2, percentage: 85, color: '#98B3A7', hoverColor: '#BD8B13' },
+            { level: 3, percentage: 60, color: '#8BA499', hoverColor: '#BD8B13' },
+            { level: 4, percentage: 90, color: '#798F85', hoverColor: '#BD8B13' },
+            { level: 5, percentage: 50, color: '#61736B', hoverColor: '#BD8B13' }
+        ];
+    
+        const levelContainer = document.getElementById('levelContainer');
+        const infoContainer = document.getElementById('infoContainer');
+        const levelInfo = document.getElementById('levelInfo');
+        const detailsContainer = document.getElementById('detailsContainer');
+        const backButton = document.querySelector('.back-button');
+    
+        backButton.addEventListener('click', function() {
+            levelContainer.classList.remove('hidden');
+            infoContainer.classList.add('hidden');
+            detailsContainer.innerHTML = ''; 
+        });
+    
+        levels.forEach(item => {
+            const levelRow = document.createElement('div');
+            levelRow.className = 'level-row';
+    
+            const levelButton = document.createElement('button');
+            levelButton.className = 'level-button';
+            levelButton.textContent = 'LEVEL ' + item.level;
+            levelButton.style.backgroundColor = item.color;
+    
+            levelButton.onmouseover = () => levelButton.style.backgroundColor = item.hoverColor;
+            levelButton.onmouseout = () => levelButton.style.backgroundColor = item.color;
+            detailsContainer.innerHTML = '';
+            const sliderContainer = document.createElement('div');
+            sliderContainer.className = 'slider-container';
+    
+            const sliderFill = document.createElement('div');
+            sliderFill.className = 'slider-fill';
+            sliderFill.style.width = item.percentage + '%';
+            sliderFill.style.backgroundColor = item.color;
+    
+            const percentageDiv = document.createElement('div');
+            percentageDiv.className = 'percentage';
+            percentageDiv.textContent = item.percentage + '%';
+    
+            sliderContainer.appendChild(sliderFill);
+            levelRow.appendChild(levelButton);
+            levelRow.appendChild(sliderContainer);
+            levelRow.appendChild(percentageDiv);
+    
+            levelContainer.appendChild(levelRow);
+    
+            levelButton.onclick = () => {
+                levelContainer.classList.add('hidden');
+                infoContainer.classList.remove('hidden');
+
+    
+                
+                const clonedButton = levelButton.cloneNode(true);
+                const clonedSliderContainer = sliderContainer.cloneNode(true);
+                const clonedPercentageDiv = percentageDiv.cloneNode(true);
+    
+                detailsContainer.appendChild(clonedButton);
+                detailsContainer.appendChild(clonedSliderContainer);
+                detailsContainer.appendChild(clonedPercentageDiv);
+
+                const floorImage = document.createElement('img');
+                floorImage.className = 'floor-image rotate-90';
+                floorImage.src = 'floor1.png'; 
+                floorImage.alt = `Floor ${item.level} Plan`;
+                detailsContainer.appendChild(floorImage);
+
+                const roundedRectangle = document.createElement('div');
+                roundedRectangle.className = 'rounded-rectangle';
+                roundedRectangle.textContent = 'Study Rooms Available'; 
+                detailsContainer.appendChild(roundedRectangle);
+
+                const imageRect = floorImage.getBoundingClientRect();
+                roundedRectangle.style.top = `${imageRect.top}px`;
+                roundedRectangle.style.left = `${imageRect.right + 10}px`;
+            };
+        });
+    </script>    
 </body>
 </html>

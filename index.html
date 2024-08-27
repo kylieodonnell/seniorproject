@@ -8,59 +8,54 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         html, body {
             display: flex;
             justify-content: center;
             align-items: center;
             background-color: #f0f0f0;
         }
-        
         .background {
-            width: 1200px; 
-            height: 696px; 
-            background-color: #F4F3F1; 
-            border-radius: 25px; 
+            width: 1300px;
+            height: 696px;
+            background-color: #F4F3F1;
+            border-radius: 25px;
             position: relative;
         }
-
         .top-bar {
             width: 100%;
-            height: 45px; 
-            background-color: #BD8B13; 
+            height: 45px;
+            background-color: #BD8B13;
             border-radius: 25px 25px 0 0;
             position: absolute;
             top: 0;
             left: 0;
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
             color: #ffffff;
-            font-family: Arial, sans-serif; 
+            font-family: Arial, sans-serif;
             font-size: 26px;
             letter-spacing: 25px;
         }
         .level-container {
-            margin-top: 90px;
+            margin-top: 0px;
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 0px;
+            gap: 50px;
         }
-
         .level-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 30px;
-            margin-bottom: -45px;
+            margin-top: 70px;
+            margin-bottom: -60px;
         }
-
         .level-button {
-            font-family:Arial, Helvetica, sans-serif;
+            font-family: Arial, Helvetica, sans-serif;
             width: 300px;
             height: 70px;
-            background-color: #97A8A3;
             border: none;
             border-radius: 50px;
             display: flex;
@@ -73,11 +68,6 @@
             text-align: center;
             transition: background-color 0.3s;
         }
-
-        .level-button:hover {
-            background-color: #7D8F8A;
-        }
-
         .slider-container {
             width: 60%;
             height: 30px;
@@ -86,67 +76,65 @@
             position: relative;
             margin-left: 20px;
         }
-
         .slider-fill {
             height: 100%;
-            background-color: #97A8A3;
             border-radius: 10px;
         }
-
         .percentage {
             width: 80px;
             text-align: right;
-            font-size: 35px;
+            font-size: 23px;
             letter-spacing: 10px;
             color: #4C6B5A;
         }
-
     </style>
 </head>
 <body>
     <div class="background">
         <div class="top-bar">OCCUPANCY COUNTER</div>
-        <div class="level-container">
-            <div class="level-row">
-                <button class="level-button">LEVEL 1</button>
-                <div class="slider-container">
-                    <div class="slider-fill" style="width: 73%;"></div>
-                </div>
-                <div class="percentage">73%</div>
-            </div>
-            <div class="level-container">
-                <div class="level-row">
-                    <button class="level-button">LEVEL 2</button>
-                    <div class="slider-container">
-                        <div class="slider-fill" style="width: 73%;"></div>
-                    </div>
-                    <div class="percentage">73%</div>
-                </div>
-            <div class="level-container">
-                <div class="level-row">
-                    <button class="level-button">LEVEL 3</button>
-                    <div class="slider-container">
-                        <div class="slider-fill" style="width: 73%;"></div>
-                    </div>
-                    <div class="percentage">73%</div>
-                </div>
-            <div class="level-container">
-                <div class="level-row">
-                    <button class="level-button">LEVEL 4</button>
-                    <div class="slider-container">
-                        <div class="slider-fill" style="width: 73%;"></div>
-                    </div>
-                    <div class="percentage">73%</div>
-                </div>
-            <div class="level-container">
-                <div class="level-row">
-                    <button class="level-button">LEVEL 5</button>
-                    <div class="slider-container">
-                        <div class="slider-fill" style="width: 73%;"></div>
-                    </div>
-                    <div class="percentage">73%</div>
-                </div>
+        <div class="level-container" id="levelContainer"></div>
     </div>
-    </div>
+    <script>
+        const levels = [
+            { level: 1, percentage: 73, color: '#B6CCC2', hoverColor: '#BD8B13' },
+            { level: 2, percentage: 85, color: '#98B3A7', hoverColor: '#BD8B13' },
+            { level: 3, percentage: 60, color: '#8BA499', hoverColor: '#BD8B13' },
+            { level: 4, percentage: 90, color: '#798F85', hoverColor: '#BD8B13' },
+            { level: 5, percentage: 50, color: '#61736B', hoverColor: '#BD8B13' }
+        ];
+
+        const container = document.getElementById('levelContainer');
+        levels.forEach(item => {
+            const levelRow = document.createElement('div');
+            levelRow.className = 'level-row';
+
+            const levelButton = document.createElement('button');
+            levelButton.className = 'level-button';
+            levelButton.textContent = 'LEVEL ' + item.level;
+            levelButton.style.backgroundColor = item.color;
+
+            levelButton.onmouseover = () => levelButton.style.backgroundColor = item.hoverColor;
+            levelButton.onmouseout = () => levelButton.style.backgroundColor = item.color;
+
+            const sliderContainer = document.createElement('div');
+            sliderContainer.className = 'slider-container';
+
+            const sliderFill = document.createElement('div');
+            sliderFill.className = 'slider-fill';
+            sliderFill.style.width = item.percentage + '%';
+            sliderFill.style.backgroundColor = item.color;
+
+            const percentageDiv = document.createElement('div');
+            percentageDiv.className = 'percentage';
+            percentageDiv.textContent = item.percentage + '%';
+
+            sliderContainer.appendChild(sliderFill);
+            levelRow.appendChild(levelButton);
+            levelRow.appendChild(sliderContainer);
+            levelRow.appendChild(percentageDiv);
+
+            container.appendChild(levelRow);
+        });
+    </script>
 </body>
 </html>
