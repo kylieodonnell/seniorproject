@@ -22,6 +22,7 @@
             background-color: #F4F3F1; 
             border-radius: 25px; 
             position: relative;
+            margin: 0 auto;
         }
     
         .top-bar {
@@ -48,9 +49,9 @@
             width: 100%;
             align-items: center;
             justify-content: center;
-            position: absolute;
+            position: relative;
             top: 50px;
-            bottom: 50px;
+            bottom: 150px;
             z-index: 1;
         }
     
@@ -143,8 +144,8 @@
             letter-spacing: 15px;
             cursor: pointer;
             text-align: center;
-            position: absolute;
-            top: 70px; 
+            position: relative;
+            top: 30px; 
             width: 100%;
         
         }
@@ -177,20 +178,52 @@
         }
 
         .rounded-rectangle {
-            margin-top: -90px;
-            margin-left: 50px; 
-            width: 500px; 
-            height: 400px; 
-            background-color: #EBF1EF; 
-            color:#154734;
-            border-radius: 15px; 
+            width: 400px; 
+            height: 450px; 
+            background-color: #EBF1EF;
+            color: #154734;
+            border-radius: 15px;
             position: absolute;
+            top: 95px; 
+            left: 790px;
             z-index: 1;
+            display: flex;
+            flex-direction: column;
             align-items: flex-start;
-            justify-content: center;
+            justify-content: flex-start;
             font-size: 24px;
-            padding-top: 20px;
+            padding: 20px;
         }
+
+        .small-rounded-button {
+            border-radius: 25px;
+            padding: 5px 10px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            margin-left: 20%;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+
+        
+    .small-rounded-button.available {
+        background-color: #1e8871;
+    }
+
+    .small-rounded-button:hover {
+        background-color: #B6CCC2;
+    }
+
+    .small-rounded-button.unavailable {
+        background-color: #d9534f;
+        cursor: not-allowed;
+    }
+
+    .small-rounded-button.unavailable:hover {
+        background-color: #e06965;
+    }
         
     </style>
 </head>
@@ -216,6 +249,13 @@
             { level: 5, percentage: 50, color: '#61736B', hoverColor: '#BD8B13' }
         ];
     
+        const study1 = [
+            { room: 1, availability: true },
+            { room: 2, availability: false },
+            { room: 3, availability: true },
+            { room: 4, availability: true }
+        ];
+    
         const levelContainer = document.getElementById('levelContainer');
         const infoContainer = document.getElementById('infoContainer');
         const levelInfo = document.getElementById('levelInfo');
@@ -239,7 +279,7 @@
     
             levelButton.onmouseover = () => levelButton.style.backgroundColor = item.hoverColor;
             levelButton.onmouseout = () => levelButton.style.backgroundColor = item.color;
-            detailsContainer.innerHTML = '';
+    
             const sliderContainer = document.createElement('div');
             sliderContainer.className = 'slider-container';
     
@@ -262,31 +302,39 @@
             levelButton.onclick = () => {
                 levelContainer.classList.add('hidden');
                 infoContainer.classList.remove('hidden');
-
     
-                
                 const clonedButton = levelButton.cloneNode(true);
                 const clonedSliderContainer = sliderContainer.cloneNode(true);
                 const clonedPercentageDiv = percentageDiv.cloneNode(true);
     
+                detailsContainer.innerHTML = ''; // Clear previous content
                 detailsContainer.appendChild(clonedButton);
                 detailsContainer.appendChild(clonedSliderContainer);
                 detailsContainer.appendChild(clonedPercentageDiv);
-
+    
                 const floorImage = document.createElement('img');
                 floorImage.className = 'floor-image rotate-90';
                 floorImage.src = 'floor1.png'; 
                 floorImage.alt = `Floor ${item.level} Plan`;
                 detailsContainer.appendChild(floorImage);
-
+    
                 const roundedRectangle = document.createElement('div');
                 roundedRectangle.className = 'rounded-rectangle';
-                roundedRectangle.textContent = 'Study Rooms Available'; 
+                roundedRectangle.textContent = 'Study Rooms Available';
                 detailsContainer.appendChild(roundedRectangle);
-
-                const imageRect = floorImage.getBoundingClientRect();
-                roundedRectangle.style.top = `${imageRect.top}px`;
-                roundedRectangle.style.left = `${imageRect.right + 10}px`;
+    
+                study1.forEach(room => {
+                    const studyRoomButton = document.createElement('button');
+                    studyRoomButton.textContent = `Study Room ${room.room}`;
+                    studyRoomButton.className = 'small-rounded-button';
+                    if (room.availability) {
+                        studyRoomButton.classList.add('available');
+                    } else {
+                        studyRoomButton.classList.add('unavailable');
+                        studyRoomButton.disabled = true;
+                    }
+                    roundedRectangle.appendChild(studyRoomButton);
+                });
             };
         });
     </script>    
