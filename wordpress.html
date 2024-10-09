@@ -284,7 +284,51 @@
             { room: 3, availability: true },
             { room: 4, availability: false }
         ];
-    
+
+        const floorData = {
+        "floor1": [
+            { "id": 2, "x": 100, "y": 460, "crowdLevel": 2 },
+            { "id": 3, "x": 450, "y": 400, "crowdLevel": 3 },
+            { "id": 4, "x": 200, "y": 240, "crowdLevel": 2 },
+        ],
+        "floor2": [
+            { "id": 2, "x": 120, "y": 150, "crowdLevel": 2 },
+        ],
+        "floor3": [
+            { "id": 2, "x": 150, "y": 160, "crowdLevel": 2 },
+            { "id": 3, "x": 320, "y": 410, "crowdLevel": 3 },
+            { "id": 4, "x": 560, "y": 440, "crowdLevel": 4 }
+        ],
+        "floor4": [
+            { "id": 2, "x": 210, "y": 320, "crowdLevel": 2 }
+        ],
+        "floor5": [
+            { "id": 2, "x": 210, "y": 320, "crowdLevel": 2 },
+            { "id": 3, "x": 320, "y": 430, "crowdLevel": 3 },
+            { "id": 4, "x": 580, "y": 430, "crowdLevel": 4 }
+        ],   
+     };
+
+     function getFeatherForCrowdLevel(level) {
+        switch (level) {
+            case 1: return '0 0 25px 12px rgba(119, 221, 119, 0.3)';  // Green, less blur
+            case 2: return '0 0 30px 30px rgba(253, 253, 150, 0.3)';  // Yellow, medium blur
+            case 3: return '0 0 55px 55px rgba(255, 165, 0, 0.3)';  // Orange, more blur
+            case 4: return '0 0 20px 20px rgba(217, 83, 79, 0.3)';  // Red, heavy blur
+            default: return '0 0 15px 10px rgba(0, 0, 0, 0.3)';      // Default blur
+        }
+    }
+
+    function getColorForCrowdLevel(level) {
+    switch (level) {
+        case 1: return 'rgba(119, 221, 119, 0.3)'; // Green
+        case 2: return 'rgba(253, 253, 150, 0.3)'; // Yellow
+        case 3: return 'rgba(255, 165, 0, 0.3)';  // Orange
+        case 4: return 'rgba(217, 83, 79, 0.3)';  // Red
+        default: return 'rgba(0, 0, 0, 0.3)';     // default
+        }
+    }
+        
         const levelContainer = document.getElementById('levelContainer');
         const infoContainer = document.getElementById('infoContainer');
         const levelInfo = document.getElementById('levelInfo');
@@ -351,6 +395,20 @@
             roundedRectangle.className = 'rounded-rectangle';
             roundedRectangle.textContent = 'Study Rooms Available';
             detailsContainer.appendChild(roundedRectangle);
+
+            floorData[`floor${item.level}`].forEach(space => {
+                const dot = document.createElement('div');
+                dot.style.position = 'absolute';
+                dot.style.left = `${space.x}px`;
+                dot.style.top = `${space.y}px`;
+                dot.style.width = '60px';  // Default size for other dots
+                dot.style.height = '60px'; // Default size for other dots
+                dot.style.borderRadius = '50%';
+                
+                dot.style.boxShadow = getFeatherForCrowdLevel(space.crowdLevel);
+                dot.style.backgroundColor = getColorForCrowdLevel(space.crowdLevel);
+                detailsContainer.appendChild(dot);
+            });
 
             let studyRooms;
             switch(item.level) {
