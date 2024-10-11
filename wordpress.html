@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+<base href="https://dev-wordpress-kennedy-library.pantheonsite.io/">
+
     <meta charset="utf-8" />
     <style>
         .scaled {
@@ -257,10 +259,10 @@
 
     <script>
         const levels = [
-            { level: 1, percentage: 73, color: '#B6CCC2', hoverColor: '#BD8B13' },
-            { level: 2, percentage: 85, color: '#98B3A7', hoverColor: '#BD8B13' },
-            { level: 3, percentage: 60, color: '#8BA499', hoverColor: '#BD8B13' },
-            { level: 4, percentage: 90, color: '#798F85', hoverColor: '#BD8B13' },
+            { level: 1, percentage: 65, color: '#B6CCC2', hoverColor: '#BD8B13' },
+            { level: 2, percentage: 10, color: '#98B3A7', hoverColor: '#BD8B13' },
+            { level: 3, percentage: 55, color: '#8BA499', hoverColor: '#BD8B13' },
+            { level: 4, percentage: 5, color: '#798F85', hoverColor: '#BD8B13' },
             { level: 5, percentage: 50, color: '#61736B', hoverColor: '#BD8B13' }
         ];
     
@@ -307,27 +309,27 @@
             { "id": 4, "x": 200, "y": 240, "crowdLevel": 2 },
         ],
         "floor2": [
-            { "id": 2, "x": 120, "y": 150, "crowdLevel": 2 },
+            { "id": 2, "x": 60, "y": 150, "crowdLevel": 2 },
         ],
         "floor3": [
             { "id": 2, "x": 150, "y": 160, "crowdLevel": 2 },
             { "id": 3, "x": 320, "y": 410, "crowdLevel": 3 },
-            { "id": 4, "x": 560, "y": 440, "crowdLevel": 4 }
+            { "id": 4, "x": 370, "y": 440, "crowdLevel": 4 }
         ],
         "floor4": [
-            { "id": 2, "x": 210, "y": 320, "crowdLevel": 2 }
+            { "id": 2, "x": 130, "y": 420, "crowdLevel": 2 }
         ],
         "floor5": [
             { "id": 2, "x": 210, "y": 320, "crowdLevel": 2 },
             { "id": 3, "x": 320, "y": 430, "crowdLevel": 3 },
-            { "id": 4, "x": 580, "y": 430, "crowdLevel": 4 }
+            { "id": 4, "x": 200, "y": 400, "crowdLevel": 4 }
         ],   
      };
 
      function getFeatherForCrowdLevel(level) {
         switch (level) {
-            case 1: return '0 0 25px 12px rgba(119, 221, 119, 0.3)';  // Green, less blur
-            case 2: return '0 0 30px 30px rgba(253, 253, 150, 0.3)';  // Yellow, medium blur
+            case 1: return '0 0 25px 12px rgba(0, 0, 0, 0)';  // free, less blur
+            case 2: return '0 0 30px 30px rgba(255, 255, 150, 0.5)';  // Yellow, medium blur
             case 3: return '0 0 55px 55px rgba(255, 165, 0, 0.3)';  // Orange, more blur
             case 4: return '0 0 20px 20px rgba(217, 83, 79, 0.3)';  // Red, heavy blur
             default: return '0 0 15px 10px rgba(0, 0, 0, 0.3)';      // Default blur
@@ -336,8 +338,8 @@
 
     function getColorForCrowdLevel(level) {
     switch (level) {
-        case 1: return 'rgba(119, 221, 119, 0.3)'; // Green
-        case 2: return 'rgba(253, 253, 150, 0.3)'; // Yellow
+        case 1: return 'rgba(0, 0, 0, 0)'; // free
+        case 2: return 'rgba(255, 255, 150, 0.5)'; // Yellow
         case 3: return 'rgba(255, 165, 0, 0.3)';  // Orange
         case 4: return 'rgba(217, 83, 79, 0.3)';  // Red
         default: return 'rgba(0, 0, 0, 0.3)';     // default
@@ -459,6 +461,7 @@
                 studyRoomButton.className = 'small-rounded-button';
                 if (room.availability) {
                     studyRoomButton.classList.add('available');
+                    studyRoomButton.title = 'Feature not implemented yet...';
                 } else {
                     studyRoomButton.classList.add('unavailable');
                     studyRoomButton.disabled = true;
