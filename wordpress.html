@@ -47,7 +47,7 @@
             color: #ffffff;
             font-family: Arial, sans-serif; 
             font-size: 26px;
-            letter-spacing: 25px;
+            letter-spacing: 10px;
         }
     
         .level-container, .info-container {
@@ -89,24 +89,8 @@
             transition: background-color 0.3s;
         }
     
-        .back-button {
-            font-family: Arial, Helvetica, sans-serif;
-            width: 160px;
-            height: 47px;
-            border: none;
-            border-radius: 25px;
-            font-size: 17px;
-            color: #ffffff;
-            background-color: #154734;
-            position: absolute;
-            top: 45px;
-            left: 20px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .back-button:hover {
-            background-color: #BD8B13;
+        .adjusted-button {
+            margin-top: -45px; 
         }
     
         .levelInfo {
@@ -220,7 +204,6 @@
             box-sizing: border-box;  
         }
 
-
         
     .small-rounded-button.available {
         background-color: #1e8871;
@@ -238,6 +221,11 @@
     .small-rounded-button.unavailable:hover {
         background-color: #e06965;
     }
+
+    .adjusted-details-container {
+        margin-top: -30px; 
+    }
+
         
     </style>
 </head>
@@ -248,7 +236,6 @@
             <div class="level-container" id="levelContainer"></div>
             <div class="info-container hidden" id="infoContainer">
                 <div class="info">
-                    <button class="back-button">Back to Levels</button>
                     <div class="levelInfo" id="levelInfo"></div>
                     <div class="details-container" id="detailsContainer"></div>
                 </div>
@@ -350,127 +337,131 @@
         const infoContainer = document.getElementById('infoContainer');
         const levelInfo = document.getElementById('levelInfo');
         const detailsContainer = document.getElementById('detailsContainer');
-        const backButton = document.querySelector('.back-button');
-    
-        backButton.addEventListener('click', function() {
+
+        levels.forEach(item => {
+        const levelRow = document.createElement('div');
+        levelRow.className = 'level-row';
+
+        const levelButton = document.createElement('button');
+        levelButton.className = 'level-button';
+        levelButton.textContent = 'LEVEL ' + item.level;
+        levelButton.style.backgroundColor = item.color;
+
+        levelButton.onmouseover = () => levelButton.style.backgroundColor = item.hoverColor;
+        levelButton.onmouseout = () => levelButton.style.backgroundColor = item.color;
+
+        const sliderContainer = document.createElement('div');
+        sliderContainer.className = 'slider-container';
+
+        const sliderFill = document.createElement('div');
+        sliderFill.className = 'slider-fill';
+        sliderFill.style.width = item.percentage + '%';
+        sliderFill.style.backgroundColor = item.color;
+
+        const percentageDiv = document.createElement('div');
+        percentageDiv.className = 'percentage';
+        percentageDiv.textContent = item.percentage + '%';
+
+        sliderContainer.appendChild(sliderFill);
+        levelRow.appendChild(levelButton);
+        levelRow.appendChild(sliderContainer);
+        levelRow.appendChild(percentageDiv);
+
+        levelContainer.appendChild(levelRow);
+
+        levelButton.onclick = () => {
+            if (infoContainer.classList.contains('hidden')) {
+                displayDetails(item, levelButton, sliderContainer, percentageDiv);
+            } else {
+                levelContainer.classList.remove('hidden');
+                infoContainer.classList.add('hidden');
+                detailsContainer.innerHTML = '';
+            }
+        };
+    });
+
+    function displayDetails(item, levelButton, sliderContainer, percentageDiv) {
+        levelContainer.classList.add('hidden');
+        infoContainer.classList.remove('hidden');
+        detailsContainer.innerHTML = '';
+
+        const clonedButton = levelButton.cloneNode(true);
+        clonedButton.onclick = function() {  //event listner on cloned button
             levelContainer.classList.remove('hidden');
             infoContainer.classList.add('hidden');
             detailsContainer.innerHTML = ''; 
-        });
-    
-        levels.forEach(item => {
-            const levelRow = document.createElement('div');
-            levelRow.className = 'level-row';
-    
-            const levelButton = document.createElement('button');
-            levelButton.className = 'level-button';
-            levelButton.textContent = 'LEVEL ' + item.level;
-            levelButton.style.backgroundColor = item.color;
-    
-            levelButton.onmouseover = () => levelButton.style.backgroundColor = item.hoverColor;
-            levelButton.onmouseout = () => levelButton.style.backgroundColor = item.color;
-    
-            const sliderContainer = document.createElement('div');
-            sliderContainer.className = 'slider-container';
-    
-            const sliderFill = document.createElement('div');
-            sliderFill.className = 'slider-fill';
-            sliderFill.style.width = item.percentage + '%';
-            sliderFill.style.backgroundColor = item.color;
-    
-            const percentageDiv = document.createElement('div');
-            percentageDiv.className = 'percentage';
-            percentageDiv.textContent = item.percentage + '%';
-    
-            sliderContainer.appendChild(sliderFill);
-            levelRow.appendChild(levelButton);
-            levelRow.appendChild(sliderContainer);
-            levelRow.appendChild(percentageDiv);
-    
-            levelContainer.appendChild(levelRow);
-    
-            levelButton.onclick = () => {
-            levelContainer.classList.add('hidden');
-            infoContainer.classList.remove('hidden');
-            
-            const clonedButton = levelButton.cloneNode(true);
-            const clonedSliderContainer = sliderContainer.cloneNode(true);
-            const clonedPercentageDiv = percentageDiv.cloneNode(true);
-
-            detailsContainer.innerHTML = ''; 
-            detailsContainer.appendChild(clonedButton);
-            detailsContainer.appendChild(clonedSliderContainer);
-            detailsContainer.appendChild(clonedPercentageDiv);
-
-            const floorImage = document.createElement('img');
-            floorImage.className = 'floor-image rotate-90';
-            
-            //floorImage.src = `floor${item.level}.png`;  
-            floorImage.src = `https://dev-wordpress-kennedy-library.pantheonsite.io/wp-content/uploads/2024/10/floor${item.level}.png`;  
-            floorImage.alt = `Floor ${item.level} Plan`;
-            detailsContainer.appendChild(floorImage);
-
-            const roundedRectangle = document.createElement('div');
-            roundedRectangle.className = 'rounded-rectangle';
-            const headerText = document.createElement('div');
-            headerText.textContent = 'Study Rooms Available';
-            headerText.style.marginBottom = '20px'; 
-            roundedRectangle.appendChild(headerText); 
-
-            detailsContainer.appendChild(roundedRectangle);
-            detailsContainer.appendChild(roundedRectangle);
-
-            floorData[`floor${item.level}`].forEach(space => {
-                const dot = document.createElement('div');
-                dot.style.position = 'absolute';
-                dot.style.left = `${space.x}px`;
-                dot.style.top = `${space.y}px`;
-                dot.style.width = '60px';  // Default size for other dots
-                dot.style.height = '60px'; // Default size for other dots
-                dot.style.borderRadius = '50%';
-                
-                dot.style.boxShadow = getFeatherForCrowdLevel(space.crowdLevel);
-                dot.style.backgroundColor = getColorForCrowdLevel(space.crowdLevel);
-                detailsContainer.appendChild(dot);
-            });
-
-            let studyRooms;
-            switch(item.level) {
-                case 1:
-                    studyRooms = study1;
-                    break;
-                case 2:
-                    studyRooms = study2;
-                    break;
-                case 3:
-                    studyRooms = study3;
-                    break;
-                case 4:
-                    studyRooms = study4;
-                    break;
-                case 5:
-                    studyRooms = study5;
-                    break;
-                default:
-                    studyRooms = [];
-            }
-
-            studyRooms.forEach(room => {
-                const studyRoomButton = document.createElement('button');
-                studyRoomButton.textContent = `Study Room ${room.room}`;
-                studyRoomButton.className = 'small-rounded-button';
-                if (room.availability) {
-                    studyRoomButton.classList.add('available');
-                    studyRoomButton.title = 'Feature not implemented yet...';
-                } else {
-                    studyRoomButton.classList.add('unavailable');
-                    studyRoomButton.disabled = true;
-                }
-                roundedRectangle.appendChild(studyRoomButton);
-            });
         };
 
+        detailsContainer.classList.add('adjusted-details-container'); 
+        detailsContainer.appendChild(clonedButton);
+        detailsContainer.appendChild(sliderContainer.cloneNode(true));
+        detailsContainer.appendChild(percentageDiv.cloneNode(true));
+
+
+        const floorImage = document.createElement('img');
+        floorImage.className = 'floor-image rotate-90';
+        floorImage.src = `https://dev-wordpress-kennedy-library.pantheonsite.io/wp-content/uploads/2024/10/floor${item.level}.png`;  
+        floorImage.alt = `Floor ${item.level} Plan`;
+        detailsContainer.appendChild(floorImage);
+
+        const roundedRectangle = document.createElement('div');
+        roundedRectangle.className = 'rounded-rectangle';
+        const headerText = document.createElement('div');
+        headerText.textContent = 'Study Rooms Available';
+        headerText.style.marginBottom = '20px'; 
+        roundedRectangle.appendChild(headerText); 
+
+        detailsContainer.appendChild(roundedRectangle);
+        detailsContainer.appendChild(roundedRectangle);
+
+        floorData[`floor${item.level}`].forEach(space => {
+            const dot = document.createElement('div');
+            dot.style.position = 'absolute';
+            dot.style.left = `${space.x}px`;
+            dot.style.top = `${space.y}px`;
+            dot.style.width = '60px';
+            dot.style.height = '60px';
+            dot.style.borderRadius = '50%';
+            dot.style.boxShadow = getFeatherForCrowdLevel(space.crowdLevel);
+            dot.style.backgroundColor = getColorForCrowdLevel(space.crowdLevel);
+            detailsContainer.appendChild(dot);
         });
+
+        let studyRooms;
+        switch(item.level) {
+            case 1:
+                studyRooms = study1;
+                break;
+            case 2:
+                studyRooms = study2;
+                break;
+            case 3:
+                studyRooms = study3;
+                break;
+            case 4:
+                studyRooms = study4;
+                break;
+            case 5:
+                studyRooms = study5;
+                break;
+            default:
+                studyRooms = [];
+        }
+
+        studyRooms.forEach(room => {
+            const studyRoomButton = document.createElement('button');
+            studyRoomButton.textContent = `Study Room ${room.room}`;
+            studyRoomButton.className = 'small-rounded-button';
+            if (room.availability) {
+                studyRoomButton.classList.add('available');
+                studyRoomButton.title = 'Feature not implemented yet...';
+            } else {
+                studyRoomButton.classList.add('unavailable');
+                studyRoomButton.disabled = true;
+            }
+            roundedRectangle.appendChild(studyRoomButton);
+        });
+    }
     </script>    
 </body>
 </html>
