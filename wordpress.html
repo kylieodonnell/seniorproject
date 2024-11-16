@@ -186,7 +186,7 @@
             justify-content: flex-start;
             font-size: 35px;
             padding: 20px;
-            letter-spacing: 6px;
+            letter-spacing: 0px;
         }
 
         .small-rounded-button {
@@ -246,49 +246,6 @@
     
 
     <script>
-        const floors = [
-            { floor: 1, percentage: 47, color: '#B6CCC2', hoverColor: '#BD8B13' },
-            { floor: 2, percentage: 10, color: '#98B3A7', hoverColor: '#BD8B13' },
-            { floor: 3, percentage: 55, color: '#8BA499', hoverColor: '#BD8B13' },
-            { floor: 4, percentage: 5, color: '#798F85', hoverColor: '#BD8B13' },
-            { floor: 5, percentage: 50, color: '#61736B', hoverColor: '#BD8B13' }
-        ];
-    
-
-        const study1 = [
-            { room: 1, availability: true },
-            { room: 2, availability: false },
-            { room: 3, availability: true },
-            { room: 4, availability: true }
-        ];
-        
-        const study2 = [
-            { room: 1, availability: false },
-            { room: 2, availability: false },
-            { room: 3, availability: true },
-            { room: 4, availability: true }
-        ];
-
-        const study3 = [
-            { room: 1, availability: true },
-            { room: 2, availability: false },
-            { room: 3, availability: true },
-            { room: 4, availability: true }
-        ];
-
-        const study4 = [
-            { room: 1, availability: true },
-            { room: 2, availability: true },
-            { room: 3, availability: true },
-            { room: 4, availability: true }
-        ];
-
-        const study5 = [
-            { room: 1, availability: true },
-            { room: 2, availability: true },
-            { room: 3, availability: true },
-            { room: 4, availability: false }
-        ];
 
         /* coordinates for each corner for the floor plans: 
 
@@ -312,185 +269,386 @@
 
         
         */ 
-        const floorData = {
-        "floor1": [
-            { "id": 1, "x": -20, "y": 100, "crowdfloor": 1 },
-            { "id": 21, "x": 200, "y": 240, "crowdfloor": 2 },
-            { "id": 31, "x": 450, "y": 400, "crowdfloor": 3 },
-            { "id": 34, "x": 100, "y": 460, "crowdfloor": 2 },
+
+        function getFeatherForCrowdfloor(floor) {
+            switch (floor) {
+                case 1: return '0 0 25px 12px rgba(0, 0, 0, 0)';  // free, less blur
+                case 2: return '0 0 30px 30px rgba(255, 255, 150, 0.5)';  // Yellow, medium blur
+                case 3: return '0 0 55px 55px rgba(255, 165, 0, 0.3)';  // Orange, more blur
+                case 4: return '0 0 20px 20px rgba(217, 83, 79, 0.3)';  // Red, heavy blur
+                default: return '0 0 15px 10px rgba(0, 0, 0, 0.3)';      // Default blur
+            }
+        }
+
+        function getColorForCrowdfloor(floor) {
+            switch (floor) {
+                case 1: return 'rgba(0, 0, 0, 0)'; // free
+                case 2: return 'rgba(255, 255, 150, 0.5)'; // yellow
+                case 3: return 'rgba(255, 165, 0, 0.3)';  // orange
+                case 4: return 'rgba(217, 83, 79, 0.3)';  // red
+                default: return 'rgba(0, 0, 0, 0.3)';     // default
+                }
+        }
+
+        // 3 mock datasets to simulate the dynamic data
+        const dataSets = [
+            {
+                name: 'dataSetA',
+                data: {
+                    floors: [
+                        { floor: 1, percentage: 47, color: '#B6CCC2', hoverColor: '#BD8B13'},
+                        { floor: 2, percentage: 10, color: '#98B3A7', hoverColor: '#BD8B13'},
+                        { floor: 3, percentage: 55, color: '#8BA499', hoverColor: '#BD8B13'},
+                        { floor: 4, percentage: 5, color: '#798F85', hoverColor: '#BD8B13'},
+                        { floor: 5, percentage: 50, color: '#61736B', hoverColor: '#BD8B13'}
+                    ],
+
+                    study1: [
+                        { room: 1, availability: true }, { room: 2, availability: false },
+                        { room: 3, availability: true }, { room: 4, availability: true }
+                    ],
+                    
+                    study2: [
+                        { room: 1, availability: false }, { room: 2, availability: false },
+                        { room: 3, availability: true }, { room: 4, availability: true }
+                    ],
+
+                    study3: [
+                        { room: 1, availability: true }, { room: 2, availability: false },
+                        { room: 3, availability: true }, { room: 4, availability: true }
+                    ],
+
+                    study4: [
+                        { room: 1, availability: true }, { room: 2, availability: true },
+                        { room: 3, availability: true }, { room: 4, availability: true }
+                    ],
+
+                    study5: [
+                        { room: 1, availability: true }, { room: 2, availability: true },
+                        { room: 3, availability: true }, { room: 4, availability: false }
+                    ],
+
+                    floorData: {
+                        "floor1": [
+                            { "id": 1, "x": -20, "y": 100, "crowdfloor": 1 },
+                            { "id": 21, "x": 200, "y": 240, "crowdfloor": 2 },
+                            { "id": 31, "x": 450, "y": 400, "crowdfloor": 3 },
+                            { "id": 34, "x": 100, "y": 460, "crowdfloor": 2 },
+                            
+                        ],
+                        "floor2": [
+                            { "id": 10, "x": 60, "y": 150, "crowdfloor": 2 },
+                        ],
+                        "floor3": [
+                            { "id": 11, "x": 150, "y": 160, "crowdfloor": 2 },
+                            { "id": 29, "x": 320, "y": 410, "crowdfloor": 3 },
+                            { "id": 30, "x": 370, "y": 440, "crowdfloor": 4 }
+                        ],
+                        "floor4": [
+                            { "id": 27, "x": 130, "y": 420, "crowdfloor": 2 }
+                        ],
+                        "floor5": [
+                            { "id": 19, "x": 210, "y": 320, "crowdfloor": 2 },
+                            { "id": 27, "x": 320, "y": 430, "crowdfloor": 3 },
+                            { "id": 28, "x": 200, "y": 400, "crowdfloor": 4 }
+                        ],   
+                    }
+                }
+            },
+            {
+                name: 'dataSetB',
+                data: {
+                    floors: [
+                        { floor: 1, percentage: 37, color: '#B6CCC2', hoverColor: '#BD8B13'},
+                        { floor: 2, percentage: 75, color: '#98B3A7', hoverColor: '#BD8B13'},
+                        { floor: 3, percentage: 42, color: '#8BA499', hoverColor: '#BD8B13'},
+                        { floor: 4, percentage: 30, color: '#798F85', hoverColor: '#BD8B13'},
+                        { floor: 5, percentage: 10, color: '#61736B', hoverColor: '#BD8B13'}
+                    ],
+
+                    study1: [
+                        { room: 1, availability: true }, { room: 2, availability: true },
+                        { room: 3, availability: false }, { room: 4, availability: true }
+                    ],
+                    
+                    study2: [
+                        { room: 1, availability: false }, { room: 2, availability: false },
+                        { room: 3, availability: false }, { room: 4, availability: true }
+                    ],
+
+                    study3: [
+                        { room: 1, availability: false }, { room: 2, availability: false },
+                        { room: 3, availability: true }, { room: 4, availability: true }
+                    ],
+
+                    study4: [
+                        { room: 1, availability: true }, { room: 2, availability: true },
+                        { room: 3, availability: true }, { room: 4, availability: true }
+                    ],
+
+                    study5: [
+                        { room: 1, availability: false }, { room: 2, availability: true },
+                        { room: 3, availability: true }, { room: 4, availability: true }
+                    ],
+
+                    floorData: {
+                        "floor1": [
+                            { "id": 33, "x": 30, "y": 440, "crowdfloor": 2 },
+                            { "id": 29, "x": 330, "y": 430, "crowdfloor": 2 },
+                            
+                        ],
+                        "floor2": [
+                            { "id": 10, "x": 45, "y": 160, "crowdfloor": 4 },
+                            { "id": 11, "x": 330, "y": 370, "crowdfloor": 3 },
+                            { "id": 11, "x": 200, "y": 360, "crowdfloor": 2 },
+                        ],
+                        "floor3": [
+                            { "id": 11, "x": 130, "y": 245, "crowdfloor": 3 },
+                            { "id": 29, "x": 220, "y": 410, "crowdfloor": 2 },
+                        ],
+                        "floor4": [
+                            { "id": 27, "x": 130, "y": 420, "crowdfloor": 3 }
+                        ],
+                        "floor5": [
+                            { "id": 19, "x": 260, "y": 390, "crowdfloor": 2 },
+                        ],   
+                    }
+                }
+            },
+            {
+                name: 'dataSetC',
+                data: {
+                    floors: [
+                        { floor: 1, percentage: 47, color: '#B6CCC2', hoverColor: '#BD8B13'},
+                        { floor: 2, percentage: 75, color: '#98B3A7', hoverColor: '#BD8B13'},
+                        { floor: 3, percentage: 55, color: '#8BA499', hoverColor: '#BD8B13'},
+                        { floor: 4, percentage: 30, color: '#798F85', hoverColor: '#BD8B13'},
+                        { floor: 5, percentage: 50, color: '#61736B', hoverColor: '#BD8B13'}
+                    ],
+
+                    study1: [
+                        { room: 1, availability: true }, { room: 2, availability: false },
+                        { room: 3, availability: false }, { room: 4, availability: true }
+                    ],
+                    
+                    study2: [
+                        { room: 1, availability: false }, { room: 2, availability: false },
+                        { room: 3, availability: false }, { room: 4, availability: true }
+                    ],
+
+                    study3: [
+                        { room: 1, availability: true }, { room: 2, availability: false },
+                        { room: 3, availability: true }, { room: 4, availability: true }
+                    ],
+
+                    study4: [
+                        { room: 1, availability: true }, { room: 2, availability: true },
+                        { room: 3, availability: true }, { room: 4, availability: true }
+                    ],
+
+                    study5: [
+                        { room: 1, availability: false }, { room: 2, availability: true },
+                        { room: 3, availability: true }, { room: 4, availability: false }
+                    ],
+
+                    floorData: {
+                        "floor1": [
+                            { "id": 1, "x": -20, "y": 100, "crowdfloor": 1 },
+                            { "id": 21, "x": 200, "y": 240, "crowdfloor": 2 },
+                            { "id": 31, "x": 450, "y": 400, "crowdfloor": 3 },
+                            { "id": 34, "x": 100, "y": 460, "crowdfloor": 2 },
+                            
+                        ],
+                        "floor2": [
+                            { "id": 10, "x": 45, "y": 160, "crowdfloor": 4 },
+                            { "id": 11, "x": 330, "y": 370, "crowdfloor": 3 },
+                            { "id": 11, "x": 200, "y": 360, "crowdfloor": 2 },
+                        ],
+                        "floor3": [
+                            { "id": 11, "x": 150, "y": 160, "crowdfloor": 2 },
+                            { "id": 29, "x": 320, "y": 410, "crowdfloor": 3 },
+                            { "id": 30, "x": 370, "y": 440, "crowdfloor": 4 }
+                        ],
+                        "floor4": [
+                            { "id": 27, "x": 130, "y": 420, "crowdfloor": 3 }
+                        ],
+                        "floor5": [
+                            { "id": 19, "x": 210, "y": 320, "crowdfloor": 2 },
+                            { "id": 27, "x": 320, "y": 430, "crowdfloor": 3 },
+                            { "id": 28, "x": 200, "y": 400, "crowdfloor": 4 }
+                        ],   
+                    }
+                }
+            }
+
+        ];
+
+        let currentIndex = 0; //start with first dataset 
+        const totalDataSets = dataSets.length; // total num of datasets 
+
+        // update dataset dynamically
+        function updateDataset() {
+            const dataset = dataSets[currentIndex].data; // get curr dataset 
+            console.log(`Dataset updated to: ${dataSets[currentIndex].name}`);
+
+            // update webpage to have new dataset 
+            updateWebpage(dataset);
+        }
+
+        // rotate dataset and update webpage
+        setInterval(() => {
+            currentIndex = (currentIndex + 1) % totalDataSets; 
+            updateDataset();
+        }, 10000);
+
+        updateDataset();
+
+
+        function updateWebpage(dataset) {
+            // clear existing data 
+            const floorContainer = document.getElementById('floorContainer');
+            const infoContainer = document.getElementById('infoContainer');
+            const floorInfo = document.getElementById('floorInfo');
+            const detailsContainer = document.getElementById('detailsContainer');
             
-        ],
-        "floor2": [
-            { "id": 10, "x": 60, "y": 150, "crowdfloor": 2 },
-        ],
-        "floor3": [
-            { "id": 11, "x": 150, "y": 160, "crowdfloor": 2 },
-            { "id": 29, "x": 320, "y": 410, "crowdfloor": 3 },
-            { "id": 30, "x": 370, "y": 440, "crowdfloor": 4 }
-        ],
-        "floor4": [
-            { "id": 27, "x": 130, "y": 420, "crowdfloor": 2 }
-        ],
-        "floor5": [
-            { "id": 19, "x": 210, "y": 320, "crowdfloor": 2 },
-            { "id": 27, "x": 320, "y": 430, "crowdfloor": 3 },
-            { "id": 28, "x": 200, "y": 400, "crowdfloor": 4 }
-        ],   
-     };
+            floorContainer.innerHTML = ''; // clear current data 
 
-     function getFeatherForCrowdfloor(floor) {
-        switch (floor) {
-            case 1: return '0 0 25px 12px rgba(0, 0, 0, 0)';  // free, less blur
-            case 2: return '0 0 30px 30px rgba(255, 255, 150, 0.5)';  // Yellow, medium blur
-            case 3: return '0 0 55px 55px rgba(255, 165, 0, 0.3)';  // Orange, more blur
-            case 4: return '0 0 20px 20px rgba(217, 83, 79, 0.3)';  // Red, heavy blur
-            default: return '0 0 15px 10px rgba(0, 0, 0, 0.3)';      // Default blur
-        }
-    }
+            // render new floors 
+            dataset.floors.forEach(item => {
+                const floorRow = document.createElement('div');
+                floorRow.className = 'floor-row';
 
-    function getColorForCrowdfloor(floor) {
-    switch (floor) {
-        case 1: return 'rgba(0, 0, 0, 0)'; // free
-        case 2: return 'rgba(255, 255, 150, 0.5)'; // Yellow
-        case 3: return 'rgba(255, 165, 0, 0.3)';  // Orange
-        case 4: return 'rgba(217, 83, 79, 0.3)';  // Red
-        default: return 'rgba(0, 0, 0, 0.3)';     // default
-        }
-    }
-        
-        const floorContainer = document.getElementById('floorContainer');
-        const infoContainer = document.getElementById('infoContainer');
-        const floorInfo = document.getElementById('floorInfo');
-        const detailsContainer = document.getElementById('detailsContainer');
+                const floorButton = document.createElement('button');
+                floorButton.className = 'floor-button';
+                floorButton.textContent = 'FLOOR ' + item.floor;
+                floorButton.style.backgroundColor = item.color;
 
-        floors.forEach(item => {
-        const floorRow = document.createElement('div');
-        floorRow.className = 'floor-row';
+                // hover effect 
+                floorButton.onmouseover = () => floorButton.style.backgroundColor = item.hoverColor;
+                floorButton.onmouseout = () => floorButton.style.backgroundColor = item.color;
 
-        const floorButton = document.createElement('button');
-        floorButton.className = 'floor-button';
-        floorButton.textContent = 'FLOOR ' + item.floor;
-        floorButton.style.backgroundColor = item.color;
+                const sliderContainer = document.createElement('div');
+                sliderContainer.className = 'slider-container';
 
-        floorButton.onmouseover = () => floorButton.style.backgroundColor = item.hoverColor;
-        floorButton.onmouseout = () => floorButton.style.backgroundColor = item.color;
+                const sliderFill = document.createElement('div');
+                sliderFill.className = 'slider-fill';
+                sliderFill.style.width = item.percentage + '%';
+                sliderFill.style.backgroundColor = item.color;
 
-        const sliderContainer = document.createElement('div');
-        sliderContainer.className = 'slider-container';
+                const percentageDiv = document.createElement('div');
+                percentageDiv.className = 'percentage';
+                percentageDiv.textContent = item.percentage + '%';
 
-        const sliderFill = document.createElement('div');
-        sliderFill.className = 'slider-fill';
-        sliderFill.style.width = item.percentage + '%';
-        sliderFill.style.backgroundColor = item.color;
+                // append slider
+                sliderContainer.appendChild(sliderFill);
+                floorRow.appendChild(floorButton);
+                floorRow.appendChild(sliderContainer);
+                floorRow.appendChild(percentageDiv);
 
-        const percentageDiv = document.createElement('div');
-        percentageDiv.className = 'percentage';
-        percentageDiv.textContent = item.percentage + '%';
+                floorContainer.appendChild(floorRow);
 
-        sliderContainer.appendChild(sliderFill);
-        floorRow.appendChild(floorButton);
-        floorRow.appendChild(sliderContainer);
-        floorRow.appendChild(percentageDiv);
+                // add onclick handler to floor to display floor info 
+                floorButton.onclick = () => {
+                if (infoContainer.classList.contains('hidden')) {
+                    displayDetails(item, floorButton, sliderContainer, percentageDiv);
+                } else {
+                    floorContainer.classList.remove('hidden');
+                    infoContainer.classList.add('hidden');
+                    detailsContainer.innerHTML = '';
+                }
+            };
 
-        floorContainer.appendChild(floorRow);
+        //display details for floor 
+        function displayDetails(item, floorButton, sliderContainer, percentageDiv){
+            const infoContainer = document.getElementById('infoContainer');
+            const detailsContainer = document.getElementById('detailsContainer');
+            const floorContainer = document.getElementById('floorContainer');
+            const studyRooms = dataset[`study${item.floor}`];
+            floorContainer.classList.add('hidden');
+            infoContainer.classList.remove('hidden');
+            detailsContainer.innerHTML = '';
 
-        floorButton.onclick = () => {
-            if (infoContainer.classList.contains('hidden')) {
-                displayDetails(item, floorButton, sliderContainer, percentageDiv);
-            } else {
+            //clone floor button and add it to the details container 
+            const clonedButton = floorButton.cloneNode(true);
+            clonedButton.onclick = function() {  //event listner on cloned button
                 floorContainer.classList.remove('hidden');
                 infoContainer.classList.add('hidden');
-                detailsContainer.innerHTML = '';
-            }
-        };
-    });
+                detailsContainer.innerHTML = ''; 
+            };
 
-    function displayDetails(item, floorButton, sliderContainer, percentageDiv) {
-        floorContainer.classList.add('hidden');
-        infoContainer.classList.remove('hidden');
-        detailsContainer.innerHTML = '';
+            // hover effect
+            clonedButton.onmouseover = () => clonedButton.style.backgroundColor = item.hoverColor;
+            clonedButton.onmouseout = () => clonedButton.style.backgroundColor = item.color;
 
-        const clonedButton = floorButton.cloneNode(true);
-        clonedButton.onclick = function() {  //event listner on cloned button
-            floorContainer.classList.remove('hidden');
-            infoContainer.classList.add('hidden');
-            detailsContainer.innerHTML = ''; 
-        };
+            detailsContainer.classList.add('adjusted-details-container'); 
+            detailsContainer.appendChild(clonedButton);
+            detailsContainer.appendChild(sliderContainer.cloneNode(true));
+            detailsContainer.appendChild(percentageDiv.cloneNode(true));
 
-        clonedButton.onmouseover = () => clonedButton.style.backgroundColor = item.hoverColor;
-        clonedButton.onmouseout = () => clonedButton.style.backgroundColor = item.color;
+            // add images of floor plan 
+            const floorImage = document.createElement('img');
+            floorImage.className = 'floor-image rotate-90';
+            floorImage.src = `https://dev-wordpress-kennedy-library.pantheonsite.io/wp-content/uploads/2024/10/floor${item.floor}.png`;  
+            floorImage.alt = `Floor ${item.floor} Plan`;
+            detailsContainer.appendChild(floorImage);
 
+            // add rounded rectangle to display study room info 
+            const roundedRectangle = document.createElement('div');
+            roundedRectangle.className = 'rounded-rectangle';
+            roundedRectangle.style.textAlign = 'center'; 
 
-        detailsContainer.classList.add('adjusted-details-container'); 
-        detailsContainer.appendChild(clonedButton);
-        detailsContainer.appendChild(sliderContainer.cloneNode(true));
-        detailsContainer.appendChild(percentageDiv.cloneNode(true));
+            // header text
+            const headerText = document.createElement('div');
+            headerText.textContent = 'Want to Book a Study Room?';
+            headerText.style.marginBottom = '20px'; 
+            roundedRectangle.appendChild(headerText); 
 
+            // sub header text 
+            // const subHeaderText = document.createElement('div');
+            // subHeaderText.textContent = 'Green = Free, Red = Taken';
+            // subHeaderText.style.marginBottom = '20px'; 
+            // subHeaderText.style.fontSize = '20px'; 
+            // subHeaderText.style.color = '#BD8B13';  
+            // subHeaderText.style.textAlign = 'center';  
+            // subHeaderText.style.marginLeft = '17%';
+            // roundedRectangle.appendChild(subHeaderText);
+            
+            detailsContainer.appendChild(roundedRectangle);
 
-        const floorImage = document.createElement('img');
-        floorImage.className = 'floor-image rotate-90';
-        floorImage.src = `https://dev-wordpress-kennedy-library.pantheonsite.io/wp-content/uploads/2024/10/floor${item.floor}.png`;  
-        floorImage.alt = `Floor ${item.floor} Plan`;
-        detailsContainer.appendChild(floorImage);
+            //render crowd level dots 
+            dataset.floorData[`floor${item.floor}`].forEach(space => {
+                const dot = document.createElement('div');
+                dot.style.position = 'absolute';
+                dot.style.left = `${space.x}px`;
+                dot.style.top = `${space.y}px`;
+                dot.style.width = '60px';
+                dot.style.height = '60px';
+                dot.style.borderRadius = '50%';
+                dot.style.boxShadow = getFeatherForCrowdfloor(space.crowdfloor);
+                dot.style.backgroundColor = getColorForCrowdfloor(space.crowdfloor);
+                detailsContainer.appendChild(dot);
+            });
 
-        const roundedRectangle = document.createElement('div');
-        roundedRectangle.className = 'rounded-rectangle';
-        const headerText = document.createElement('div');
-        headerText.textContent = 'Study Rooms Available';
-        headerText.style.marginBottom = '20px'; 
-        roundedRectangle.appendChild(headerText); 
-
-        detailsContainer.appendChild(roundedRectangle);
-        detailsContainer.appendChild(roundedRectangle);
-
-        floorData[`floor${item.floor}`].forEach(space => {
-            const dot = document.createElement('div');
-            dot.style.position = 'absolute';
-            dot.style.left = `${space.x}px`;
-            dot.style.top = `${space.y}px`;
-            dot.style.width = '60px';
-            dot.style.height = '60px';
-            dot.style.borderRadius = '50%';
-            dot.style.boxShadow = getFeatherForCrowdfloor(space.crowdfloor);
-            dot.style.backgroundColor = getColorForCrowdfloor(space.crowdfloor);
-            detailsContainer.appendChild(dot);
-        });
-
-        let studyRooms;
-        switch(item.floor) {
-            case 1:
-                studyRooms = study1;
-                break;
-            case 2:
-                studyRooms = study2;
-                break;
-            case 3:
-                studyRooms = study3;
-                break;
-            case 4:
-                studyRooms = study4;
-                break;
-            case 5:
-                studyRooms = study5;
-                break;
-            default:
-                studyRooms = [];
+            // reder study room buttons 
+            studyRooms.forEach(room => {
+                const studyRoomButton = document.createElement('button');
+                studyRoomButton.textContent = `Study Room ${room.room}`;
+                studyRoomButton.className = 'small-rounded-button';
+                if (room.availability) {
+                    studyRoomButton.classList.add('available');
+                    studyRoomButton.title = 'Feature not implemented yet...';
+                } else {
+                    studyRoomButton.classList.add('unavailable');
+                    studyRoomButton.disabled = true;
+                }
+                roundedRectangle.appendChild(studyRoomButton);
+            });
         }
-
-        studyRooms.forEach(room => {
-            const studyRoomButton = document.createElement('button');
-            studyRoomButton.textContent = `Study Room ${room.room}`;
-            studyRoomButton.className = 'small-rounded-button';
-            if (room.availability) {
-                studyRoomButton.classList.add('available');
-                studyRoomButton.title = 'Feature not implemented yet...';
-            } else {
-                studyRoomButton.classList.add('unavailable');
-                studyRoomButton.disabled = true;
-            }
-            roundedRectangle.appendChild(studyRoomButton);
-        });
-    }
+    });
+    
+    // console debug message 
+    console.log('Webpage updated with the new dataset.');
+}
     </script>    
 </body>
 </html>
